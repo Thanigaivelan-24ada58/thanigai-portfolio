@@ -309,10 +309,10 @@ footer{border-top:1px solid var(--border);padding:32px 5%;text-align:center;colo
     </div>
     <div class="card-3d fade-up" style="text-align:left">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
-        <input class="contact-input" placeholder="Your Name" id="cn">
-        <input class="contact-input" placeholder="Email" type="email" id="ce">
+        <input class="contact-input" placeholder="Your Name" id="cn" name="name" required>
+        <input class="contact-input" placeholder="Email" type="email" id="ce" name="email" required>
       </div>
-      <textarea class="contact-input" rows="5" placeholder="What's on your mind? 💬" id="cm" style="margin-bottom:14px;resize:vertical"></textarea>
+      <textarea class="contact-input" rows="5" placeholder="What's on your mind? 💬" id="cm" name="message" style="margin-bottom:14px;resize:vertical" required></textarea>
       <button onclick="sendMsg()" class="btn btn-primary" style="width:100%;justify-content:center" id="csend">Send Message 🚀</button>
       <div id="c-status" style="display:none;margin-top:12px;padding:12px;border-radius:10px;font-size:.84rem"></div>
     </div>
@@ -479,15 +479,17 @@ async function sendMsg(){
   st.style.display='none';
 
   try {
+    const formData = new FormData();
+    formData.append('access_key', '442ffe88-aa9e-47f1-bd8a-ff9174b07ef6');
+    formData.append('name', n);
+    formData.append('email', e);
+    formData.append('message', m);
+    formData.append('subject', `New Message from ${n} - Portfolio`);
+    formData.append('from_name', 'Portfolio Contact Form');
+
     const response = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-      body: JSON.stringify({
-        access_key: '442ffe88-aa9e-47f1-bd8a-ff9174b07ef6',
-        name: n,
-        email: e,
-        message: m
-      })
+      body: formData
     });
     
     const result = await response.json();
